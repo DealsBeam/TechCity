@@ -1,0 +1,38 @@
+---
+import { h } from "hastscript";
+import { toHtml } from "hast-util-to-html";
+
+const html = toHtml([
+  h("!doctype", { html: true }),
+  h("html", [
+    h("head", [
+      h("meta", { charset: "utf-8" }),
+      h("meta", {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1.0",
+      }),
+      h("title", "Content Manager"),
+      h("script", {
+        src: "https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js",
+      }),
+      h("script", {
+        is: "inline",
+        content: `
+          if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+              if (!user) {
+                window.netlifyIdentity.on("login", () => {
+                  document.location.href = "/admin/";
+                });
+              }
+            });
+          }
+        `,
+      }),
+    ]),
+    h("body"),
+  ]),
+]);
+---
+
+<Fragment set:html={html} />
